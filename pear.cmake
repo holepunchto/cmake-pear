@@ -223,6 +223,12 @@ function(add_pear_appling target)
 
   add_executable(${target})
 
+  set_target_properties(
+    ${target}
+    PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+  )
+
   target_sources(
     ${target}
     PRIVATE
