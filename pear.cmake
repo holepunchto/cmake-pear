@@ -166,7 +166,7 @@ if(NOT TARGET pear)
   endif()
 endif()
 
-function(configure_pear_appling_darwin target)
+function(configure_pear_appling_macos target)
   set(one_value_keywords
     NAME
     VERSION
@@ -207,16 +207,113 @@ function(configure_pear_appling_darwin target)
   )
 endfunction()
 
+function(configure_pear_appling_windows target)
+  set(one_value_keywords
+    NAME
+    VERSION
+    PUBLISHER
+    DESCRIPTION
+    LOGO
+    ICON
+  )
+
+  cmake_parse_arguments(
+    PARSE_ARGV 1 ARGV "" "${one_value_keywords}" ""
+  )
+
+  if(NOT ARGV_LOGO)
+    set(ARGV_LOGO "assets/win32/icon.png")
+  endif()
+
+  if(NOT ARGV_ICON)
+    set(ARGV_ICON "assets/win32/icon.ico")
+  endif()
+
+  set_target_properties(
+    ${target}
+    PROPERTIES
+    OUTPUT_NAME "${ARGV_NAME}"
+  )
+
+  target_link_options(
+    ${target}
+    PRIVATE
+      $<$<CONFIG:Release>:/subsystem:windows /entry:mainCRTStartup>
+  )
+
+  add_appx_manifest(
+    ${target}_manifest
+    NAME "${ARGV_NAME}"
+    VERSION "${ARGV_VERSION}"
+    DESCRIPTION "${ARGV_DESCRIPTION}"
+    PUBLISHER_DISPLAY_NAME "${ARGV_PUBLISHER}"
+    UNVIRTUALIZED_PATHS "$(KnownFolder:RoamingAppData)\\pear"
+  )
+
+  add_appx_mapping(
+    ${target}_mapping
+    NAME "${ARGV_MAPPING}"
+    LOGO "${ARGV_LOGO}"
+    ICON "${ARGV_ICON}"
+    TARGET ${target}
+  )
+
+  add_msix_package(
+    ${target}_msix
+    DESTINATION "${ARGV_NAME}.msix"
+    DEPENDS ${target}
+  )
+endfunction()
+
+function(configure_pear_appling_linux target)
+  set(one_value_keywords
+    NAME
+    ICON
+    CATEGORY
+  )
+
+  cmake_parse_arguments(
+    PARSE_ARGV 1 ARGV "" "${one_value_keywords}" ""
+  )
+
+  if(NOT ARGV_ICON)
+    set(ARGV_ICON "assets/linux/icon.png")
+  endif()
+
+  string(TOLOWER ARGV_NAME ARGV_OUTPUT_NAME)
+
+  set_target_properties(
+    ${target}
+    PROPERTIES
+    OUTPUT_NAME "${ARGV_OUTPUT_NAME}"
+  )
+
+  add_app_image(
+    ${target}_app_image
+    NAME "${ARGV_NAME}"
+    ICON "${ARGV_ICON}"
+    CATEGORIES "${ARGV_CATEGORY}"
+    TARGET ${target}
+  )
+endfunction()
+
 function(add_pear_appling target)
   set(one_value_keywords
     KEY
     NAME
     VERSION
+    DESCRIPTION
     PUBLISHER
 
     MACOS_IDENTIFIER
     MACOS_ICON
     MACOS_CATEGORY
+
+    WINDOWS_LOGO
+    WINDOWS_ICON
+
+    LINUX_ICON
+    LINUX_CATEGORY
   )
 
   cmake_parse_arguments(
@@ -251,7 +348,7 @@ function(add_pear_appling target)
   )
 
   if(pear_host MATCHES "darwin")
-    configure_pear_appling_darwin(
+    configure_pear_appling_macos(
       ${target}
       NAME "${ARGV_NAME}"
       VERSION "${ARGV_VERSION}"
@@ -261,6 +358,20 @@ function(add_pear_appling target)
       CATEGORY "${ARGV_MACOS_CATEGORY}"
     )
   elseif(pear_host MATCHES "win32")
+    configure_pear_appling_windows(
+      ${target}
+      NAME "${ARGV_NAME}"
+      VERSION "${ARGV_VERSION}"
+      DESCRIPTION "${ARGV_DESCRIPTION}"
+      LOGO "${ARGV_WINDOWS_LOGO}"
+      ICON "${ARGV_WINDOWS_ICON}"
+    )
   elseif(pear_host MATCHES "linux")
+    configure_pear_appling_linux(
+      ${target}
+      NAME "${ARGV_NAME}"
+      ICON "${ARGV_LINUX_ICON}"
+      CATEGORY "${ARGV_LINUX_CATEGORY}"
+    )
   endif()
 endfunction()
