@@ -22,6 +22,15 @@ mirror_drive(
   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
 )
 
+
+mirror_drive(
+  SOURCE excdougxjday9q8d13azwwjss8p8r66fhykb18kzjfk9bwaetkuo
+  DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
+  PREFIX /${pear_host}
+  CHECKOUT 2
+  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+)
+
 if(NOT TARGET c++)
   add_library(c++ STATIC IMPORTED)
 
