@@ -172,6 +172,7 @@ function(configure_pear_appling_darwin target)
     VERSION
     PUBLISHER
     IDENTIFIER
+    ICON
     CATEGORY
   )
 
@@ -214,6 +215,7 @@ function(add_pear_appling target)
     PUBLISHER
 
     MACOS_IDENTIFIER
+    MACOS_ICON
     MACOS_CATEGORY
   )
 
@@ -255,6 +257,7 @@ function(add_pear_appling target)
       VERSION "${ARGV_VERSION}"
       PUBLISHER "${ARGV_PUBLISHER}"
       IDENTIFIER "${ARGV_MACOS_IDENTIFIER}"
+      ICON "${ARGV_MACOS_ICON}"
       CATEGORY "${ARGV_MACOS_CATEGORY}"
     )
   elseif(pear_host MATCHES "win32")
