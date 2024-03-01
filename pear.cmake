@@ -164,6 +164,27 @@ if(NOT TARGET pear)
         "-framework WebKit"
     )
   endif()
+
+  if(pear_host MATCHES "win32")
+    target_link_libraries(
+      pear
+      INTERFACE
+        WindowsApp
+        Shcore
+    )
+  endif()
+
+  if(pear_host MATCHES "linux")
+    find_package(PkgConfig REQUIRED)
+
+    pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4)
+
+    target_link_libraries(
+      pear
+      INTERFACE
+        PkgConfig::GTK4
+    )
+  endif()
 endif()
 
 function(configure_pear_appling_macos target)

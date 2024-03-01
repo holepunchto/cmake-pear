@@ -2,5 +2,8 @@
 
 int
 main (int argc, char *argv[]) {
-  return pear_launch(argc, argv, KEY, NAME);
+  pear_key_t key = KEY;
+  const char *name = NAME;
+
+  return pear_launch(argc, argv, key, name);
 }
