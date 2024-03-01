@@ -171,6 +171,7 @@ function(configure_pear_appling_macos target)
     NAME
     VERSION
     PUBLISHER
+    SPLASH
     IDENTIFIER
     ICON
     CATEGORY
@@ -197,6 +198,7 @@ function(configure_pear_appling_macos target)
     PUBLISHER_DISPLAY_NAME "${ARGV_PUBLISHER}"
     IDENTIFIER "${ARGV_IDENTIFIER}"
     CATEGORY "${ARGV_CATEGORY}"
+    TARGET ${target}
   )
 
   add_macos_bundle(
@@ -204,6 +206,8 @@ function(configure_pear_appling_macos target)
     DESTINATION "${ARGV_NAME}.app"
     ICON "${ARGV_ICON}"
     TARGET ${target}
+    RESOURCES
+      FILE "${ARGV_SPLASH}" "splash.png"
   )
 endfunction()
 
@@ -213,6 +217,7 @@ function(configure_pear_appling_windows target)
     VERSION
     PUBLISHER
     DESCRIPTION
+    SPLASH
     LOGO
     ICON
   )
@@ -248,6 +253,8 @@ function(configure_pear_appling_windows target)
     DESCRIPTION "${ARGV_DESCRIPTION}"
     PUBLISHER_DISPLAY_NAME "${ARGV_PUBLISHER}"
     UNVIRTUALIZED_PATHS "$(KnownFolder:RoamingAppData)\\pear"
+    RESOURCES
+      FILE "${ARGV_SPLASH}" "splash.png"
   )
 
   add_appx_mapping(
@@ -268,8 +275,10 @@ endfunction()
 function(configure_pear_appling_linux target)
   set(one_value_keywords
     NAME
+    DESCRIPTION
     ICON
     CATEGORY
+    SPLASH
   )
 
   cmake_parse_arguments(
@@ -291,9 +300,12 @@ function(configure_pear_appling_linux target)
   add_app_image(
     ${target}_app_image
     NAME "${ARGV_NAME}"
+    DESCRIPTION "${ARGV_DESCRIPTION}"
     ICON "${ARGV_ICON}"
-    CATEGORIES "${ARGV_CATEGORY}"
+    CATEGORY "${ARGV_CATEGORY}"
     TARGET ${target}
+    RESOURCES
+      FILE "${ARGV_SPLASH}" "splash.png"
   )
 endfunction()
 
@@ -304,6 +316,7 @@ function(add_pear_appling target)
     VERSION
     DESCRIPTION
     PUBLISHER
+    SPLASH
 
     MACOS_IDENTIFIER
     MACOS_ICON
@@ -319,6 +332,10 @@ function(add_pear_appling target)
   cmake_parse_arguments(
     PARSE_ARGV 1 ARGV "" "${one_value_keywords}" ""
   )
+
+  if(NOT ARGV_SPLASH)
+    set(ARGV_SPLASH "assets/splash.png")
+  endif()
 
   add_executable(${target})
 
@@ -344,7 +361,7 @@ function(add_pear_appling target)
   target_link_libraries(
     ${target}
     PRIVATE
-      pear
+      $<LINK_LIBRARY:WHOLE_ARCHIVE,pear>
   )
 
   if(pear_host MATCHES "darwin")
@@ -353,6 +370,7 @@ function(add_pear_appling target)
       NAME "${ARGV_NAME}"
       VERSION "${ARGV_VERSION}"
       PUBLISHER "${ARGV_PUBLISHER}"
+      SPLASH "${ARGV_SPLASH}"
       IDENTIFIER "${ARGV_MACOS_IDENTIFIER}"
       ICON "${ARGV_MACOS_ICON}"
       CATEGORY "${ARGV_MACOS_CATEGORY}"
@@ -363,6 +381,7 @@ function(add_pear_appling target)
       NAME "${ARGV_NAME}"
       VERSION "${ARGV_VERSION}"
       DESCRIPTION "${ARGV_DESCRIPTION}"
+      SPLASH "${ARGV_SPLASH}"
       LOGO "${ARGV_WINDOWS_LOGO}"
       ICON "${ARGV_WINDOWS_ICON}"
     )
@@ -370,6 +389,8 @@ function(add_pear_appling target)
     configure_pear_appling_linux(
       ${target}
       NAME "${ARGV_NAME}"
+      DESCRIPTION "${ARGV_DESCRIPTION}"
+      SPLASH "${ARGV_SPLASH}"
       ICON "${ARGV_LINUX_ICON}"
       CATEGORY "${ARGV_LINUX_CATEGORY}"
     )
