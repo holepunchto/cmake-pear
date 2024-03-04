@@ -169,8 +169,11 @@ if(NOT TARGET pear)
     target_link_libraries(
       pear
       INTERFACE
-        WindowsApp
+        Dbghelp
+        Iphlpapi
         Shcore
+        Userenv
+        WindowsApp
     )
   endif()
 
@@ -274,16 +277,15 @@ function(configure_pear_appling_windows target)
     DESCRIPTION "${ARGV_DESCRIPTION}"
     PUBLISHER_DISPLAY_NAME "${ARGV_PUBLISHER}"
     UNVIRTUALIZED_PATHS "$(KnownFolder:RoamingAppData)\\pear"
-    RESOURCES
-      FILE "${ARGV_SPLASH}" "splash.png"
   )
 
   add_appx_mapping(
     ${target}_mapping
-    NAME "${ARGV_MAPPING}"
     LOGO "${ARGV_LOGO}"
     ICON "${ARGV_ICON}"
     TARGET ${target}
+    RESOURCES
+      FILE "${ARGV_SPLASH}" "splash.png"
   )
 
   add_msix_package(
@@ -401,6 +403,7 @@ function(add_pear_appling target)
       ${target}
       NAME "${ARGV_NAME}"
       VERSION "${ARGV_VERSION}"
+      PUBLISHER "${ARGV_PUBLISHER}"
       DESCRIPTION "${ARGV_DESCRIPTION}"
       SPLASH "${ARGV_SPLASH}"
       LOGO "${ARGV_WINDOWS_LOGO}"
