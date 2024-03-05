@@ -194,7 +194,7 @@ function(configure_pear_appling_macos target)
   set(one_value_keywords
     NAME
     VERSION
-    PUBLISHER
+    AUTHOR
     SPLASH
     IDENTIFIER
     ICON
@@ -222,7 +222,7 @@ function(configure_pear_appling_macos target)
     ${target}_bundle_info
     NAME "${ARGV_NAME}"
     VERSION "${ARGV_VERSION}"
-    PUBLISHER_DISPLAY_NAME "${ARGV_PUBLISHER}"
+    PUBLISHER_DISPLAY_NAME "${ARGV_AUTHOR}"
     IDENTIFIER "${ARGV_IDENTIFIER}"
     CATEGORY "${ARGV_CATEGORY}"
     TARGET ${target}
@@ -251,11 +251,13 @@ function(configure_pear_appling_windows target)
   set(one_value_keywords
     NAME
     VERSION
-    PUBLISHER
+    AUTHOR
     DESCRIPTION
     SPLASH
     LOGO
     ICON
+    SIGNING_SUBJECT
+    SIGNING_SUBJECT_NAME
   )
 
   cmake_parse_arguments(
@@ -287,7 +289,8 @@ function(configure_pear_appling_windows target)
     NAME "${ARGV_NAME}"
     VERSION "${ARGV_VERSION}"
     DESCRIPTION "${ARGV_DESCRIPTION}"
-    PUBLISHER_DISPLAY_NAME "${ARGV_PUBLISHER}"
+    PUBLISHER "${ARGV_SIGNING_SUBJECT}"
+    PUBLISHER_DISPLAY_NAME "${ARGV_AUTHOR}"
     UNVIRTUALIZED_PATHS "$(KnownFolder:RoamingAppData)\\pear"
   )
 
@@ -304,6 +307,13 @@ function(configure_pear_appling_windows target)
     ${target}_msix
     DESTINATION "${ARGV_NAME}.msix"
     DEPENDS ${target}
+  )
+
+  code_sign_msix_package(
+    ${target}_signature
+    PATH "${CMAKE_CURRENT_BINARY_DIR}/${ARGV_NAME}.msix"
+    SUBJECT_NAME "${ARGV_SIGNING_SUBJECT_NAME}"
+    DEPENDS ${target}_msix
   )
 endfunction()
 
@@ -350,7 +360,7 @@ function(add_pear_appling target)
     NAME
     VERSION
     DESCRIPTION
-    PUBLISHER
+    AUTHOR
     SPLASH
 
     MACOS_IDENTIFIER
@@ -362,6 +372,8 @@ function(add_pear_appling target)
 
     WINDOWS_LOGO
     WINDOWS_ICON
+    WINDOWS_SIGNING_SUBJECT
+    WINDOWS_SIGNING_SUBJECT_NAME
 
     LINUX_ICON
     LINUX_CATEGORY
@@ -407,7 +419,7 @@ function(add_pear_appling target)
       ${target}
       NAME "${ARGV_NAME}"
       VERSION "${ARGV_VERSION}"
-      PUBLISHER "${ARGV_PUBLISHER}"
+      AUTHOR "${ARGV_AUTHOR}"
       SPLASH "${ARGV_SPLASH}"
       IDENTIFIER "${ARGV_MACOS_IDENTIFIER}"
       ICON "${ARGV_MACOS_ICON}"
@@ -421,11 +433,13 @@ function(add_pear_appling target)
       ${target}
       NAME "${ARGV_NAME}"
       VERSION "${ARGV_VERSION}"
-      PUBLISHER "${ARGV_PUBLISHER}"
+      AUTHOR "${ARGV_AUTHOR}"
       DESCRIPTION "${ARGV_DESCRIPTION}"
       SPLASH "${ARGV_SPLASH}"
       LOGO "${ARGV_WINDOWS_LOGO}"
       ICON "${ARGV_WINDOWS_ICON}"
+      SIGNING_SUBJECT "${ARGV_WINDOWS_SIGNING_SUBJECT}"
+      SIGNING_SUBJECT_NAME "${ARGV_WINDOWS_SIGNING_SUBJECT_NAME}"
     )
   elseif(pear_host MATCHES "linux")
     configure_pear_appling_linux(
