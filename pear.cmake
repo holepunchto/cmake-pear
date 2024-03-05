@@ -199,6 +199,9 @@ function(configure_pear_appling_macos target)
     IDENTIFIER
     ICON
     CATEGORY
+    SIGNING_IDENTITY
+    SIGNING_ENTITLEMENTS
+    SIGNING_KEYCHAIN
   )
 
   cmake_parse_arguments(
@@ -232,6 +235,15 @@ function(configure_pear_appling_macos target)
     TARGET ${target}
     RESOURCES
       FILE "${ARGV_SPLASH}" "splash.png"
+  )
+
+  code_sign_macos_bundle(
+    ${target}_sign
+    PATH "${CMAKE_CURRENT_BINARY_DIR}/${ARGV_NAME}.app"
+    IDENTITY "${ARGV_SIGNING_IDENTITY}"
+    ENTITLEMENTS "${ARGV_SIGNING_ENTITLEMENTS}"
+    KEYCHAIN "${ARGV_SIGNING_KEYCHAIN}"
+    DEPENDS ${target}_bundle
   )
 endfunction()
 
@@ -344,6 +356,9 @@ function(add_pear_appling target)
     MACOS_IDENTIFIER
     MACOS_ICON
     MACOS_CATEGORY
+    MACOS_SIGNING_IDENTITY
+    MACOS_SIGNING_ENTITLEMENTS
+    MACOS_SIGNING_KEYCHAIN
 
     WINDOWS_LOGO
     WINDOWS_ICON
@@ -397,6 +412,9 @@ function(add_pear_appling target)
       IDENTIFIER "${ARGV_MACOS_IDENTIFIER}"
       ICON "${ARGV_MACOS_ICON}"
       CATEGORY "${ARGV_MACOS_CATEGORY}"
+      SIGNING_IDENTITY "${ARGV_MACOS_SIGNING_IDENTITY}"
+      SIGNING_ENTITLEMENTS "${ARGV_MACOS_SIGNING_ENTITLEMENTS}"
+      SIGNING_KEYCHAIN "${ARGV_MACOS_SIGNING_KEYCHAIN}"
     )
   elseif(pear_host MATCHES "win32")
     configure_pear_appling_windows(
