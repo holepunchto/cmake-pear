@@ -200,12 +200,15 @@ function(configure_pear_appling_macos target)
     ICON
     CATEGORY
     SIGNING_IDENTITY
-    SIGNING_ENTITLEMENTS
     SIGNING_KEYCHAIN
   )
 
+  set(multi_value_keywords
+    ENTITLEMENTS
+  )
+
   cmake_parse_arguments(
-    PARSE_ARGV 1 ARGV "" "${one_value_keywords}" ""
+    PARSE_ARGV 1 ARGV "" "${one_value_keywords}" "${multi_value_keywords}"
   )
 
   if(NOT ARGV_ICON)
@@ -216,6 +219,11 @@ function(configure_pear_appling_macos target)
     ${target}
     PROPERTIES
     OUTPUT_NAME "${ARGV_NAME}"
+  )
+
+  add_macos_entitlements(
+    ${target}_entitlements
+    ENTITLEMENTS ${ARGV_ENTITLEMENTS}
   )
 
   add_macos_bundle_info(
@@ -241,7 +249,6 @@ function(configure_pear_appling_macos target)
     ${target}_sign
     PATH "${CMAKE_CURRENT_BINARY_DIR}/${ARGV_NAME}.app"
     IDENTITY "${ARGV_SIGNING_IDENTITY}"
-    ENTITLEMENTS "${ARGV_SIGNING_ENTITLEMENTS}"
     KEYCHAIN "${ARGV_SIGNING_KEYCHAIN}"
     DEPENDS ${target}_bundle
   )
@@ -367,7 +374,6 @@ function(add_pear_appling target)
     MACOS_ICON
     MACOS_CATEGORY
     MACOS_SIGNING_IDENTITY
-    MACOS_SIGNING_ENTITLEMENTS
     MACOS_SIGNING_KEYCHAIN
 
     WINDOWS_LOGO
@@ -379,8 +385,12 @@ function(add_pear_appling target)
     LINUX_CATEGORY
   )
 
+  set(multi_value_keywords
+    MACOS_ENTITLEMENTS
+  )
+
   cmake_parse_arguments(
-    PARSE_ARGV 1 ARGV "" "${one_value_keywords}" ""
+    PARSE_ARGV 1 ARGV "" "${one_value_keywords}" "${multi_value_keywords}"
   )
 
   if(NOT ARGV_SPLASH)
@@ -424,8 +434,8 @@ function(add_pear_appling target)
       IDENTIFIER "${ARGV_MACOS_IDENTIFIER}"
       ICON "${ARGV_MACOS_ICON}"
       CATEGORY "${ARGV_MACOS_CATEGORY}"
+      ENTITLEMENTS ${ARGV_MACOS_ENTITLEMENTS}
       SIGNING_IDENTITY "${ARGV_MACOS_SIGNING_IDENTITY}"
-      SIGNING_ENTITLEMENTS "${ARGV_MACOS_SIGNING_ENTITLEMENTS}"
       SIGNING_KEYCHAIN "${ARGV_MACOS_SIGNING_KEYCHAIN}"
     )
   elseif(pear_host MATCHES "win32")
