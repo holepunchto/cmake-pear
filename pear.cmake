@@ -264,7 +264,7 @@ function(configure_pear_appling_windows target)
     LOGO
     ICON
     SIGNING_SUBJECT
-    SIGNING_SUBJECT_NAME
+    SIGNING_THUMBPRINT
   )
 
   cmake_parse_arguments(
@@ -319,7 +319,7 @@ function(configure_pear_appling_windows target)
   code_sign_msix_package(
     ${target}_signature
     PATH "${CMAKE_CURRENT_BINARY_DIR}/${ARGV_NAME}.msix"
-    SUBJECT_NAME "${ARGV_SIGNING_SUBJECT_NAME}"
+    THUMBPRINT "${ARGV_SIGNING_THUMBPRINT}"
     DEPENDS ${target}_msix
   )
 endfunction()
@@ -379,7 +379,7 @@ function(add_pear_appling target)
     WINDOWS_LOGO
     WINDOWS_ICON
     WINDOWS_SIGNING_SUBJECT
-    WINDOWS_SIGNING_SUBJECT_NAME
+    WINDOWS_SIGNING_THUMBPRINT
 
     LINUX_ICON
     LINUX_CATEGORY
@@ -449,7 +449,7 @@ function(add_pear_appling target)
       LOGO "${ARGV_WINDOWS_LOGO}"
       ICON "${ARGV_WINDOWS_ICON}"
       SIGNING_SUBJECT "${ARGV_WINDOWS_SIGNING_SUBJECT}"
-      SIGNING_SUBJECT_NAME "${ARGV_WINDOWS_SIGNING_SUBJECT_NAME}"
+      SIGNING_THUMBPRINT "${ARGV_WINDOWS_SIGNING_THUMBPRINT}"
     )
   elseif(pear_host MATCHES "linux")
     configure_pear_appling_linux(
