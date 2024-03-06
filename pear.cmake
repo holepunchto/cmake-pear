@@ -215,6 +215,13 @@ function(configure_pear_appling_macos target)
     set(ARGV_ICON "assets/darwin/icon.icns")
   endif()
 
+  list(PREPEND ARGV_ENTITLEMENTS
+    com.apple.security.cs.allow-jit
+    com.apple.security.cs.allow-unsigned-executable-memory
+    com.apple.security.cs.allow-dyld-environment-variables
+    com.apple.security.cs.disable-library-validation
+  )
+
   set_target_properties(
     ${target}
     PROPERTIES
