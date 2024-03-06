@@ -293,6 +293,18 @@ function(configure_pear_appling_windows target)
       $<$<CONFIG:Release>:/subsystem:windows /entry:mainCRTStartup>
   )
 
+  file(READ "${pear_module_dir}/pear.manifest" manifest)
+
+  string(CONFIGURE "${manifest}" manifest)
+
+  file(GENERATE OUTPUT "${ARGV_NAME}.manifest" CONTENT "${manifest}" NEWLINE_STYLE WIN32)
+
+  target_sources(
+    ${target}
+    PRIVATE
+      "${CMAKE_CURRENT_BINARY_DIR}/${ARGV_NAME}.manifest"
+  )
+
   add_appx_manifest(
     ${target}_manifest
     NAME "${ARGV_NAME}"
