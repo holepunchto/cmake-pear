@@ -27,7 +27,7 @@ mirror_drive(
   SOURCE excdougxjday9q8d13azwwjss8p8r66fhykb18kzjfk9bwaetkuo
   DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
   PREFIX /${pear_host}
-  CHECKOUT 8
+  CHECKOUT 9
   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
 )
 
@@ -212,7 +212,7 @@ function(configure_pear_appling_macos target)
   )
 
   if(NOT ARGV_ICON)
-    set(ARGV_ICON "assets/darwin/icon.icns")
+    set(ARGV_ICON "assets/darwin/icon.png")
   endif()
 
   list(PREPEND ARGV_ENTITLEMENTS
@@ -268,7 +268,6 @@ function(configure_pear_appling_windows target)
     AUTHOR
     DESCRIPTION
     SPLASH
-    LOGO
     ICON
     SIGNING_SUBJECT
     SIGNING_THUMBPRINT
@@ -278,12 +277,8 @@ function(configure_pear_appling_windows target)
     PARSE_ARGV 1 ARGV "" "${one_value_keywords}" ""
   )
 
-  if(NOT ARGV_LOGO)
-    set(ARGV_LOGO "assets/win32/icon.png")
-  endif()
-
   if(NOT ARGV_ICON)
-    set(ARGV_ICON "assets/win32/icon.ico")
+    set(ARGV_ICON "assets/win32/icon.png")
   endif()
 
   set_target_properties(
@@ -310,7 +305,6 @@ function(configure_pear_appling_windows target)
 
   add_appx_mapping(
     ${target}_mapping
-    LOGO "${ARGV_LOGO}"
     ICON "${ARGV_ICON}"
     TARGET ${target}
     RESOURCES
@@ -377,13 +371,12 @@ function(add_pear_appling target)
     AUTHOR
     SPLASH
 
-    MACOS_IDENTIFIER
     MACOS_ICON
     MACOS_CATEGORY
+    MACOS_IDENTIFIER
     MACOS_SIGNING_IDENTITY
     MACOS_SIGNING_KEYCHAIN
 
-    WINDOWS_LOGO
     WINDOWS_ICON
     WINDOWS_SIGNING_SUBJECT
     WINDOWS_SIGNING_THUMBPRINT
@@ -438,9 +431,9 @@ function(add_pear_appling target)
       VERSION "${ARGV_VERSION}"
       AUTHOR "${ARGV_AUTHOR}"
       SPLASH "${ARGV_SPLASH}"
-      IDENTIFIER "${ARGV_MACOS_IDENTIFIER}"
       ICON "${ARGV_MACOS_ICON}"
       CATEGORY "${ARGV_MACOS_CATEGORY}"
+      IDENTIFIER "${ARGV_MACOS_IDENTIFIER}"
       ENTITLEMENTS ${ARGV_MACOS_ENTITLEMENTS}
       SIGNING_IDENTITY "${ARGV_MACOS_SIGNING_IDENTITY}"
       SIGNING_KEYCHAIN "${ARGV_MACOS_SIGNING_KEYCHAIN}"
@@ -453,7 +446,6 @@ function(add_pear_appling target)
       AUTHOR "${ARGV_AUTHOR}"
       DESCRIPTION "${ARGV_DESCRIPTION}"
       SPLASH "${ARGV_SPLASH}"
-      LOGO "${ARGV_WINDOWS_LOGO}"
       ICON "${ARGV_WINDOWS_ICON}"
       SIGNING_SUBJECT "${ARGV_WINDOWS_SIGNING_SUBJECT}"
       SIGNING_THUMBPRINT "${ARGV_WINDOWS_SIGNING_THUMBPRINT}"
