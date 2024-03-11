@@ -10,6 +10,7 @@ elseif(pear_host MATCHES "linux")
   include(app-image)
 elseif(pear_host MATCHES "win32")
   include(msix)
+  include(windows)
 else()
   message(FATAL_ERROR "Unsupported target '${pear_host}'")
 endif()
@@ -252,7 +253,7 @@ function(configure_pear_appling_macos target)
       FILE "${ARGV_SPLASH}" "splash.png"
   )
 
-  code_sign_macos_bundle(
+  code_sign_macos(
     ${target}_sign
     PATH "${CMAKE_CURRENT_BINARY_DIR}/${ARGV_NAME}.app"
     IDENTITY "${ARGV_SIGNING_IDENTITY}"
@@ -305,6 +306,12 @@ function(configure_pear_appling_windows target)
       "${CMAKE_CURRENT_BINARY_DIR}/${ARGV_NAME}.manifest"
   )
 
+  code_sign_windows(
+    ${target}_signature
+    TARGET ${target}
+    THUMBPRINT "${ARGV_SIGNING_THUMBPRINT}"
+  )
+
   add_appx_manifest(
     ${target}_manifest
     NAME "${ARGV_NAME}"
@@ -324,16 +331,16 @@ function(configure_pear_appling_windows target)
   )
 
   add_msix_package(
-    ${target}_msix
+    ${target}_package
     DESTINATION "${ARGV_NAME}.msix"
-    DEPENDS ${target}
+    DEPENDS ${target} ${target}_signature
   )
 
-  code_sign_msix_package(
-    ${target}_signature
+  code_sign_windows(
+    ${target}_package_signature
     PATH "${CMAKE_CURRENT_BINARY_DIR}/${ARGV_NAME}.msix"
     THUMBPRINT "${ARGV_SIGNING_THUMBPRINT}"
-    DEPENDS ${target}_msix
+    DEPENDS ${target}_package
   )
 endfunction()
 
