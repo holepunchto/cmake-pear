@@ -19,10 +19,9 @@ mirror_drive(
   SOURCE qogbhqbcxknrpeotyz7hk4x3mxuf6d9mhb1dxm6ms5sdn6hh1uso
   DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
   PREFIX /${pear_host}
-  CHECKOUT 113
+  CHECKOUT 115
   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
 )
-
 
 mirror_drive(
   SOURCE excdougxjday9q8d13azwwjss8p8r66fhykb18kzjfk9bwaetkuo
@@ -286,6 +285,12 @@ function(configure_pear_appling_windows target)
     ${target}
     PROPERTIES
     OUTPUT_NAME "${ARGV_NAME}"
+  )
+
+  target_compile_options(
+    ${target}
+    PRIVATE
+      /MT$<$<CONFIG:Debug>:d>
   )
 
   target_link_options(
