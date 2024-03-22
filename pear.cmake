@@ -27,7 +27,7 @@ mirror_drive(
   SOURCE excdougxjday9q8d13azwwjss8p8r66fhykb18kzjfk9bwaetkuo
   DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
   PREFIX /${pear_host}
-  CHECKOUT 15
+  CHECKOUT 16
   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
 )
 
@@ -228,6 +228,12 @@ function(configure_pear_appling_macos target)
     OUTPUT_NAME "${ARGV_NAME}"
   )
 
+  add_macos_iconset(
+    ${target}_icon
+    ICONS
+      "${ARGV_ICON}" 512 2x
+  )
+
   add_macos_entitlements(
     ${target}_entitlements
     ENTITLEMENTS ${ARGV_ENTITLEMENTS}
@@ -246,10 +252,11 @@ function(configure_pear_appling_macos target)
   add_macos_bundle(
     ${target}_bundle
     DESTINATION "${ARGV_NAME}.app"
-    ICON "${ARGV_ICON}"
+    ICON "${CMAKE_CURRENT_BINARY_DIR}/icon.icns"
     TARGET ${target}
     RESOURCES
       FILE "${ARGV_SPLASH}" "splash.png"
+    DEPENDS ${target}_icon
   )
 
   code_sign_macos(
