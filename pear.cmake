@@ -373,7 +373,7 @@ function(configure_pear_appling_linux target)
     set(ARGV_ICON "assets/linux/icon.png")
   endif()
 
-  string(TOLOWER ARGV_NAME ARGV_OUTPUT_NAME)
+  string(TOLOWER "${ARGV_NAME}" ARGV_OUTPUT_NAME)
 
   set_target_properties(
     ${target}
