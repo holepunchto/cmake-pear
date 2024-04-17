@@ -1,14 +1,16 @@
 # cmake-pear
+
 CMake functions to streamline the build process and packaging of Pear applications.
 
 ## API
+
 #### `add_pear_appling`
+
 Defines and configures a new Pear appling. Takes care of:
 
 - Linking the code to the core Pear libraries.
 - Managing appling metadata (key, name, version, etc.).
 - Calling the appropriate platform-specific packaging functions.
-
 
 ```cmake
 add_pear_appling(
@@ -32,7 +34,7 @@ add_pear_appling(
     LINUX_CATEGORY <string>
 )
 ```
-### Options
+
 ##### `<target>`
 The name of the CMake target to create for the Pear appling.
 	
