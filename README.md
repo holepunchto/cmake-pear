@@ -1,56 +1,110 @@
 # cmake-pear
 This repository contains essential CMake functions and modules to streamline the build process and packaging of Pear applications within the [bare-dev](https://github.com/holepunchto/bare-dev) development environment.
 
-## 
-### Core Pear Libraries
-
-- add_library(lib ...) : Imports and integrates the necessary libraries for the Appling, libraries include the standard `C++` lib, `V8` library for execution, `js` library to provide bindings to v8 and the `pear` library.
-
-
-### Cross-Platform Appling Build Automation:
-
-- `configure_pear_appling_macos`: Contains macOS-specific settings for the following:
-    - App icon generation (`add_macos_iconset`)
-    - Entitlements configuration (`add_macos_entitlements`)
-    - Creation of the macOS app bundle (`add_macos_bundle`)
-    - Code signing (`code_sign_macos`)
-- `configure_pear_appling_windows`: Handles Windows-specific tasks like:
-    - Manifest generation
-    - MSIX package creation (`add_msix_package`)
-    - Code signing (`code_sign_windows`)
-- `configure_pear_appling_linux`: Responsible for Linux configurations, including:
-    - AppImage generation (`add_app_image`).
-
-### Pear Appling Creation:
-- `add_pear_appling function`: Streamlines the process of defining and configuring  a new Pear appling. Takes care of:
-    - Linking the code to the core Pear libraries.
-    - Managing appling metadata (key, name, version, etc.).
-    - Calling the appropriate platform-specific packaging functions.
+## API
+`add_pear_appling function`: Streamlines the process of defining and configuring  a new Pear appling. Takes care of:
+- Linking the code to the core Pear libraries.
+- Managing appling metadata (key, name, version, etc.).
+- Calling the appropriate platform-specific packaging functions.
 
 
-    ```c
-    add_pear_appling(
-    <target> 
-    KEY <string> 
-    NAME <string> 
-    VERSION <string> 
-    DESCRIPTION <string> 
-    AUTHOR <string> 
+```c
+add_pear_appling(
+<target> 
+KEY <string> 
+NAME <string> 
+VERSION <string> 
+DESCRIPTION <string> 
+AUTHOR <string> 
 
-    # Optional parameters:
-    [SPLASH <path>]
-    [MACOS_ICON <path>]
-    MACOS_CATEGORY <string>
-    MACOS_IDENTIFIER <string>
-    MACOS_SIGNING_IDENTITY <string>
-    [MACOS_SIGNING_KEYCHAIN <string>]
-    [MACOS_ENTITLEMENTS <entitlement...>]
-    [WINDOWS_ICON <path>]
-    WINDOWS_SIGNING_SUBJECT <string>
-    WINDOWS_SIGNING_THUMBPRINT <string>
-    [LINUX_ICON <path>]
-    LINUX_CATEGORY <string>)
-    ```
+# Optional parameters:
+[SPLASH <path>]
+[MACOS_ICON <path>]
+MACOS_CATEGORY <string>
+MACOS_IDENTIFIER <string>
+MACOS_SIGNING_IDENTITY <string>
+[MACOS_SIGNING_KEYCHAIN <string>]
+[MACOS_ENTITLEMENTS <entitlement...>]
+[WINDOWS_ICON <path>]
+WINDOWS_SIGNING_SUBJECT <string>
+WINDOWS_SIGNING_THUMBPRINT <string>
+[LINUX_ICON <path>]
+LINUX_CATEGORY <string>)
+```
+### Options
+#### Required Parameters
+##### `<target>`
+The name of the executable target that represents the Pear appling.\
+Default  :
+
+##### `KEY <string>`
+A unique string identifier for the appling.\
+Default  :
+
+##### `NAME <string>`
+The display name of the appling, shown to users.\
+Default  :
+
+##### `VERSION <string>` 
+The version of the Pear appling (e.g., "1.0.0").\
+Default  :
+
+##### `DESCRIPTION <string>`
+A short description of the app's functionality.\
+Default  :
+
+##### `AUTHOR <string>`
+Author's name or the name of the organization creating the appling.\
+Default  :
+
+#### Optional Parameters
+##### `SPLASH <path>`
+The path to a splash screen image displayed during appling launch.\
+Default  :
+
+##### `MACOS_ICON <path>` 
+The path to the icon for the macOS app bundle.\
+Default  :
+
+##### `MACOS_CATEGORY <string>`
+The category for the app in the macOS App Store or Finder.\
+Default  :
+
+##### `MACOS_IDENTIFIER <string>`
+A unique bundle identifier for the macOS app.\
+Default  :
+
+##### `MACOS_SIGNING_IDENTITY <string>`
+macOS code signing identity (from a developer certificate).\
+Default  :
+
+##### `MACOS_SIGNING_KEYCHAIN <string>` 
+The path to the keychain containing the signing identity.\
+Default  :
+
+##### `MACOS_ENTITLEMENTS <entitlement...>` 
+A list of macOS entitlements for special permissions.\
+Default  :
+
+##### `WINDOWS_ICON <path>` 
+The path to the icon for the Windows MSIX package.\
+Default  :
+
+##### `WINDOWS_SIGNING_SUBJECT <string>` 
+Subject name for Windows code signing.\
+Default  :
+
+##### `WINDOWS_SIGNING_THUMBPRINT <string>` 
+Thumbprint of the Windows code signing certificate.\
+Default  :
+
+##### `LINUX_ICON <path>` 
+Path to the icon for the Linux AppImage.\
+Default  :
+
+##### `LINUX_CATEGORY <string>` 
+The category for the app in Linux application menus.\
+Default  :
 
 ## License
 
