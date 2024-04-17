@@ -1,110 +1,91 @@
 # cmake-pear
-This repository contains essential CMake functions and modules to streamline the build process and packaging of Pear applications within the [bare-dev](https://github.com/holepunchto/bare-dev) development environment.
+CMake functions to streamline the build process and packaging of Pear applications.
 
 ## API
-`add_pear_appling function`: Streamlines the process of defining and configuring  a new Pear appling. Takes care of:
+#### `add_pear_appling`
+Defines and configures a new Pear appling. Takes care of:
+
 - Linking the code to the core Pear libraries.
 - Managing appling metadata (key, name, version, etc.).
 - Calling the appropriate platform-specific packaging functions.
 
 
-```c
+```cmake
 add_pear_appling(
-<target> 
-KEY <string> 
-NAME <string> 
-VERSION <string> 
-DESCRIPTION <string> 
-AUTHOR <string> 
-
-# Optional parameters:
-[SPLASH <path>]
-[MACOS_ICON <path>]
-MACOS_CATEGORY <string>
-MACOS_IDENTIFIER <string>
-MACOS_SIGNING_IDENTITY <string>
-[MACOS_SIGNING_KEYCHAIN <string>]
-[MACOS_ENTITLEMENTS <entitlement...>]
-[WINDOWS_ICON <path>]
-WINDOWS_SIGNING_SUBJECT <string>
-WINDOWS_SIGNING_THUMBPRINT <string>
-[LINUX_ICON <path>]
-LINUX_CATEGORY <string>)
+    <target>
+    KEY <string> 
+    NAME <string> 
+    VERSION <string> 
+    DESCRIPTION <string> 
+    AUTHOR <string> 
+    [SPLASH <path>]
+    [MACOS_ICON <path>]
+    MACOS_CATEGORY <string>
+    MACOS_IDENTIFIER <string>
+    MACOS_SIGNING_IDENTITY <string>
+    [MACOS_SIGNING_KEYCHAIN <string>]
+    [MACOS_ENTITLEMENTS <entitlement...>]
+    [WINDOWS_ICON <path>]
+    WINDOWS_SIGNING_SUBJECT <string>
+    WINDOWS_SIGNING_THUMBPRINT <string>
+    [LINUX_ICON <path>]
+    LINUX_CATEGORY <string>
+)
 ```
 ### Options
-#### Required Parameters
 ##### `<target>`
-The name of the executable target that represents the Pear appling.\
-Default  :
-
+The name of the CMake target to create for the Pear appling.
+	
 ##### `KEY <string>`
-A unique string identifier for the appling.\
-Default  :
-
+The key of the Pear appling.
+	
 ##### `NAME <string>`
-The display name of the appling, shown to users.\
-Default  :
-
+The name of the appling as presented to users.
+	
 ##### `VERSION <string>` 
-The version of the Pear appling (e.g., "1.0.0").\
-Default  :
-
+The semantic version of the Pear appling, e.g. "1.0.0".
+	
 ##### `DESCRIPTION <string>`
-A short description of the app's functionality.\
-Default  :
-
+A short description of the app's functionality.
+	
 ##### `AUTHOR <string>`
-Author's name or the name of the organization creating the appling.\
-Default  :
-
-#### Optional Parameters
+Author's name or the name of the organization creating the appling.
+	
 ##### `SPLASH <path>`
-The path to a splash screen image displayed during appling launch.\
-Default  :
-
+The path to a splash screen image displayed during appling launch. Defaults to `"assets/splash.png"`.
+	
 ##### `MACOS_ICON <path>` 
-The path to the icon for the macOS app bundle.\
-Default  :
+The path to the icon for the macOS app bundle. Defaults to `"assets/darwin/icon.png"`.
 
 ##### `MACOS_CATEGORY <string>`
-The category for the app in the macOS App Store or Finder.\
-Default  :
+The category for the app in the macOS App Store or Finder.
 
 ##### `MACOS_IDENTIFIER <string>`
-A unique bundle identifier for the macOS app.\
-Default  :
+A unique bundle identifier for the macOS app.
 
 ##### `MACOS_SIGNING_IDENTITY <string>`
-macOS code signing identity (from a developer certificate).\
-Default  :
+A macOS code signing identity string. Defaults to `"Apple Development"`.
 
 ##### `MACOS_SIGNING_KEYCHAIN <string>` 
-The path to the keychain containing the signing identity.\
-Default  :
+The path to the keychain containing the signing identity.
 
 ##### `MACOS_ENTITLEMENTS <entitlement...>` 
-A list of macOS entitlements for special permissions.\
-Default  :
+A list of macOS entitlements for special permissions.
 
 ##### `WINDOWS_ICON <path>` 
-The path to the icon for the Windows MSIX package.\
-Default  :
+The path to the icon for the Windows MSIX package. Defaults to `"assets/win32/icon.png"`.
 
 ##### `WINDOWS_SIGNING_SUBJECT <string>` 
-Subject name for Windows code signing.\
-Default  :
+Subject name for Windows code signing.
 
 ##### `WINDOWS_SIGNING_THUMBPRINT <string>` 
-Thumbprint of the Windows code signing certificate.\
-Default  :
+Thumbprint of the Windows code signing certificate.
 
 ##### `LINUX_ICON <path>` 
-Path to the icon for the Linux AppImage.\
-Default  :
+Path to the icon for the Linux AppImage. Defaults to `"assets/linux/icon.png"`.
 
 ##### `LINUX_CATEGORY <string>` 
-The category for the app in Linux application menus.\
-Default  :
+The category for the app in Linux application menus.
 
 ## License
 
