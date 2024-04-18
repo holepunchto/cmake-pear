@@ -11,11 +11,11 @@ Defines and configures a new Pear appling. Takes care of linking the code to the
 ```cmake
 add_pear_appling(
   <target>
-  KEY <string> 
-  NAME <string> 
-  VERSION <string> 
-  DESCRIPTION <string> 
-  AUTHOR <string> 
+  KEY <string>
+  NAME <string>
+  VERSION <string>
+  DESCRIPTION <string>
+  AUTHOR <string>
   [SPLASH <path>]
   [MACOS_ICON <path>]
   MACOS_CATEGORY <string>
@@ -33,25 +33,25 @@ add_pear_appling(
 
 ##### `<target>`
 The name of the CMake target to create for the Pear appling.
-	
+
 ##### `KEY <string>`
 The key of the Pear appling.
-	
+
 ##### `NAME <string>`
 The name of the appling as presented to users.
-	
+
 ##### `VERSION <string>` 
 The semantic version of the Pear appling, e.g. "1.0.0".
-	
+
 ##### `DESCRIPTION <string>`
 A short description of the app's functionality.
-	
+
 ##### `AUTHOR <string>`
 Author's name or the name of the organization creating the appling.
-	
+
 ##### `SPLASH <path>`
 The path to a splash screen image displayed during appling launch. Defaults to `"assets/splash.png"`.
-	
+
 ##### `MACOS_ICON <path>` 
 The path to the icon for the macOS app bundle. Defaults to `"assets/darwin/icon.png"`.
 
