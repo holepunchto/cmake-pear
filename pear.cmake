@@ -252,7 +252,6 @@ function(configure_pear_appling_macos target)
   add_macos_bundle(
     ${target}_bundle
     DESTINATION "${ARGV_NAME}.app"
-    ICON "${CMAKE_CURRENT_BINARY_DIR}/icon.icns"
     TARGET ${target}
     RESOURCES
       FILE "${ARGV_SPLASH}" "splash.png"
