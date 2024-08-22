@@ -1,6 +1,8 @@
-set(pear_module_dir "${CMAKE_CURRENT_LIST_DIR}")
+include_guard(GLOBAL)
 
 include(bare)
+
+set(pear_module_dir "${CMAKE_CURRENT_LIST_DIR}")
 
 bare_target(pear_host)
 
