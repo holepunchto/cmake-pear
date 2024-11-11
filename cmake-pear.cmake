@@ -1,27 +1,27 @@
-include_guard(GLOBAL)
+include_guard()
 
-include(bare)
-
-set(pear_module_dir "${CMAKE_CURRENT_LIST_DIR}")
+find_package(cmake-bare REQUIRED PATHS node_modules/cmake-bare)
 
 bare_target(pear_host)
 
 if(pear_host MATCHES "darwin")
-  include(macos)
+  find_package(cmake-macos REQUIRED PATHS node_modules/cmake-macos)
 elseif(pear_host MATCHES "linux")
-  include(app-image)
+  find_package(cmake-app-image REQUIRED PATHS node_modules/cmake-app-image)
 elseif(pear_host MATCHES "win32")
-  include(msix)
-  include(windows)
+  find_package(cmake-windows REQUIRED PATHS node_modules/cmake-windows)
+  find_package(cmake-msix REQUIRED PATHS node_modules/cmake-msix)
 else()
-  message(FATAL_ERROR "Unsupported target '${pear_host}'")
+  message(FATAL_ERROR "Unsupported target \"${pear_host}\"")
 endif()
+
+set(pear_module_dir "${CMAKE_CURRENT_LIST_DIR}")
 
 mirror_drive(
   SOURCE qogbhqbcxknrpeotyz7hk4x3mxuf6d9mhb1dxm6ms5sdn6hh1uso
   DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
   PREFIX /${pear_host}
-  CHECKOUT 128
+  CHECKOUT 282
   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
 )
 
@@ -29,7 +29,7 @@ mirror_drive(
   SOURCE excdougxjday9q8d13azwwjss8p8r66fhykb18kzjfk9bwaetkuo
   DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
   PREFIX /${pear_host}
-  CHECKOUT 37
+  CHECKOUT 43
   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
 )
 
