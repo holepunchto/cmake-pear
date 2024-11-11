@@ -246,22 +246,22 @@ function(add_pear_appling target)
     set(ARGV_SPLASH "assets/splash.png")
   endif()
 
-  bare_target(pear_host)
+  bare_target(host)
+
+  set(prebuilds "${CMAKE_CURRENT_BINARY_DIR}/_pear")
 
   mirror_drive(
     SOURCE qogbhqbcxknrpeotyz7hk4x3mxuf6d9mhb1dxm6ms5sdn6hh1uso
-    DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
-    PREFIX /${pear_host}
+    DESTINATION "${prebuilds}"
+    PREFIX /${host}
     CHECKOUT 282
-    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
   )
 
   mirror_drive(
     SOURCE excdougxjday9q8d13azwwjss8p8r66fhykb18kzjfk9bwaetkuo
-    DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
-    PREFIX /${pear_host}
+    DESTINATION "${prebuilds}"
+    PREFIX /${host}
     CHECKOUT 43
-    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
   )
 
   if(NOT TARGET c++)
@@ -270,7 +270,7 @@ function(add_pear_appling target)
     find_library(
       c++
       NAMES c++ libc++
-      PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
+      PATHS "${prebuilds}/${host}"
       REQUIRED
       NO_DEFAULT_PATH
       NO_CMAKE_FIND_ROOT_PATH
@@ -289,7 +289,7 @@ function(add_pear_appling target)
     find_library(
       v8
       NAMES v8 libv8
-      PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
+      PATHS "${prebuilds}/${host}"
       REQUIRED
       NO_DEFAULT_PATH
       NO_CMAKE_FIND_ROOT_PATH
@@ -307,13 +307,13 @@ function(add_pear_appling target)
         c++
     )
 
-    if(pear_host MATCHES "linux")
+    if(host MATCHES "linux")
       target_link_libraries(
         v8
         INTERFACE
           m
       )
-    elseif(pear_host MATCHES "android")
+    elseif(host MATCHES "android")
       find_library(log log)
 
       target_link_libraries(
@@ -321,7 +321,7 @@ function(add_pear_appling target)
         INTERFACE
           "${log}"
       )
-    elseif(pear_host MATCHES "win32")
+    elseif(host MATCHES "win32")
       target_link_libraries(
         v8
         INTERFACE
@@ -336,7 +336,7 @@ function(add_pear_appling target)
     find_library(
       js
       NAMES js libjs
-      PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
+      PATHS "${prebuilds}/${host}"
       REQUIRED
       NO_DEFAULT_PATH
       NO_CMAKE_FIND_ROOT_PATH
@@ -361,7 +361,7 @@ function(add_pear_appling target)
     find_library(
       pear
       NAMES pear libpear
-      PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
+      PATHS "${prebuilds}/${host}"
       REQUIRED
       NO_DEFAULT_PATH
       NO_CMAKE_FIND_ROOT_PATH
@@ -385,7 +385,7 @@ function(add_pear_appling target)
         js
     )
 
-    if(pear_host MATCHES "darwin")
+    if(host MATCHES "darwin")
       target_link_libraries(
         pear
         INTERFACE
@@ -396,9 +396,7 @@ function(add_pear_appling target)
           "-framework AVKit"
           "-framework WebKit"
       )
-    endif()
-
-    if(pear_host MATCHES "win32")
+    elseif(host MATCHES "win32")
       target_link_libraries(
         pear
         INTERFACE
@@ -408,9 +406,7 @@ function(add_pear_appling target)
           Userenv
           WindowsApp
       )
-    endif()
-
-    if(pear_host MATCHES "linux")
+    elseif(host MATCHES "linux")
       find_package(PkgConfig REQUIRED)
 
       pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4)
@@ -450,7 +446,7 @@ function(add_pear_appling target)
       $<LINK_LIBRARY:WHOLE_ARCHIVE,pear>
   )
 
-  if(pear_host MATCHES "darwin")
+  if(host MATCHES "darwin")
     configure_pear_appling_macos(
       ${target}
       NAME "${ARGV_NAME}"
@@ -464,7 +460,7 @@ function(add_pear_appling target)
       SIGNING_IDENTITY "${ARGV_MACOS_SIGNING_IDENTITY}"
       SIGNING_KEYCHAIN "${ARGV_MACOS_SIGNING_KEYCHAIN}"
     )
-  elseif(pear_host MATCHES "win32")
+  elseif(host MATCHES "win32")
     configure_pear_appling_windows(
       ${target}
       NAME "${ARGV_NAME}"
@@ -476,7 +472,7 @@ function(add_pear_appling target)
       SIGNING_SUBJECT "${ARGV_WINDOWS_SIGNING_SUBJECT}"
       SIGNING_THUMBPRINT "${ARGV_WINDOWS_SIGNING_THUMBPRINT}"
     )
-  elseif(pear_host MATCHES "linux")
+  elseif(host MATCHES "linux")
     configure_pear_appling_linux(
       ${target}
       NAME "${ARGV_NAME}"
