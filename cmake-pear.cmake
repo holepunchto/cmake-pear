@@ -1,196 +1,13 @@
 include_guard()
 
 find_package(cmake-bare REQUIRED PATHS node_modules/cmake-bare)
-
-bare_target(pear_host)
-
-if(pear_host MATCHES "darwin")
-  find_package(cmake-macos REQUIRED PATHS node_modules/cmake-macos)
-elseif(pear_host MATCHES "linux")
-  find_package(cmake-app-image REQUIRED PATHS node_modules/cmake-app-image)
-elseif(pear_host MATCHES "win32")
-  find_package(cmake-windows REQUIRED PATHS node_modules/cmake-windows)
-  find_package(cmake-msix REQUIRED PATHS node_modules/cmake-msix)
-else()
-  message(FATAL_ERROR "Unsupported target \"${pear_host}\"")
-endif()
+find_package(cmake-drive REQUIRED PATHS node_modules/cmake-drive)
+find_package(cmake-macos REQUIRED PATHS node_modules/cmake-macos)
+find_package(cmake-app-image REQUIRED PATHS node_modules/cmake-app-image)
+find_package(cmake-windows REQUIRED PATHS node_modules/cmake-windows)
+find_package(cmake-msix REQUIRED PATHS node_modules/cmake-msix)
 
 set(pear_module_dir "${CMAKE_CURRENT_LIST_DIR}")
-
-mirror_drive(
-  SOURCE qogbhqbcxknrpeotyz7hk4x3mxuf6d9mhb1dxm6ms5sdn6hh1uso
-  DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
-  PREFIX /${pear_host}
-  CHECKOUT 282
-  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-)
-
-mirror_drive(
-  SOURCE excdougxjday9q8d13azwwjss8p8r66fhykb18kzjfk9bwaetkuo
-  DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
-  PREFIX /${pear_host}
-  CHECKOUT 43
-  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-)
-
-if(NOT TARGET c++)
-  add_library(c++ STATIC IMPORTED GLOBAL)
-
-  find_library(
-    c++
-    NAMES c++ libc++
-    PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
-    REQUIRED
-    NO_DEFAULT_PATH
-    NO_CMAKE_FIND_ROOT_PATH
-  )
-
-  set_target_properties(
-    c++
-    PROPERTIES
-    IMPORTED_LOCATION "${c++}"
-  )
-endif()
-
-if(NOT TARGET v8)
-  add_library(v8 STATIC IMPORTED GLOBAL)
-
-  find_library(
-    v8
-    NAMES v8 libv8
-    PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
-    REQUIRED
-    NO_DEFAULT_PATH
-    NO_CMAKE_FIND_ROOT_PATH
-  )
-
-  set_target_properties(
-    v8
-    PROPERTIES
-    IMPORTED_LOCATION "${v8}"
-  )
-
-  target_link_libraries(
-    v8
-    INTERFACE
-      c++
-  )
-
-  if(pear_host MATCHES "linux")
-    target_link_libraries(
-      v8
-      INTERFACE
-        m
-    )
-  elseif(pear_host MATCHES "android")
-    find_library(log log)
-
-    target_link_libraries(
-      v8
-      INTERFACE
-        "${log}"
-    )
-  elseif(pear_host MATCHES "win32")
-    target_link_libraries(
-      v8
-      INTERFACE
-        winmm
-    )
-  endif()
-endif()
-
-if(NOT TARGET js)
-  add_library(js STATIC IMPORTED GLOBAL)
-
-  find_library(
-    js
-    NAMES js libjs
-    PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
-    REQUIRED
-    NO_DEFAULT_PATH
-    NO_CMAKE_FIND_ROOT_PATH
-  )
-
-  set_target_properties(
-    js
-    PROPERTIES
-    IMPORTED_LOCATION "${js}"
-  )
-
-  target_link_libraries(
-    js
-    INTERFACE
-      v8
-  )
-endif()
-
-if(NOT TARGET pear)
-  add_library(pear STATIC IMPORTED GLOBAL)
-
-  find_library(
-    pear
-    NAMES pear libpear
-    PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
-    REQUIRED
-    NO_DEFAULT_PATH
-    NO_CMAKE_FIND_ROOT_PATH
-  )
-
-  set_target_properties(
-    pear
-    PROPERTIES
-    IMPORTED_LOCATION "${pear}"
-  )
-
-  target_include_directories(
-    pear
-    INTERFACE
-      "${pear_module_dir}"
-  )
-
-  target_link_libraries(
-    pear
-    INTERFACE
-      js
-  )
-
-  if(pear_host MATCHES "darwin")
-    target_link_libraries(
-      pear
-      INTERFACE
-        "-framework Foundation"
-        "-framework CoreMedia"
-        "-framework AppKit"
-        "-framework AVFoundation"
-        "-framework AVKit"
-        "-framework WebKit"
-    )
-  endif()
-
-  if(pear_host MATCHES "win32")
-    target_link_libraries(
-      pear
-      INTERFACE
-        Dbghelp
-        Iphlpapi
-        Shcore
-        Userenv
-        WindowsApp
-    )
-  endif()
-
-  if(pear_host MATCHES "linux")
-    find_package(PkgConfig REQUIRED)
-
-    pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4)
-
-    target_link_libraries(
-      pear
-      INTERFACE
-        PkgConfig::GTK4
-    )
-  endif()
-endif()
 
 function(configure_pear_appling_macos target)
   set(one_value_keywords
@@ -427,6 +244,183 @@ function(add_pear_appling target)
 
   if(NOT ARGV_SPLASH)
     set(ARGV_SPLASH "assets/splash.png")
+  endif()
+
+  bare_target(pear_host)
+
+  mirror_drive(
+    SOURCE qogbhqbcxknrpeotyz7hk4x3mxuf6d9mhb1dxm6ms5sdn6hh1uso
+    DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
+    PREFIX /${pear_host}
+    CHECKOUT 282
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+  )
+
+  mirror_drive(
+    SOURCE excdougxjday9q8d13azwwjss8p8r66fhykb18kzjfk9bwaetkuo
+    DESTINATION "${PROJECT_SOURCE_DIR}/prebuilds"
+    PREFIX /${pear_host}
+    CHECKOUT 43
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+  )
+
+  if(NOT TARGET c++)
+    add_library(c++ STATIC IMPORTED GLOBAL)
+
+    find_library(
+      c++
+      NAMES c++ libc++
+      PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
+      REQUIRED
+      NO_DEFAULT_PATH
+      NO_CMAKE_FIND_ROOT_PATH
+    )
+
+    set_target_properties(
+      c++
+      PROPERTIES
+      IMPORTED_LOCATION "${c++}"
+    )
+  endif()
+
+  if(NOT TARGET v8)
+    add_library(v8 STATIC IMPORTED GLOBAL)
+
+    find_library(
+      v8
+      NAMES v8 libv8
+      PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
+      REQUIRED
+      NO_DEFAULT_PATH
+      NO_CMAKE_FIND_ROOT_PATH
+    )
+
+    set_target_properties(
+      v8
+      PROPERTIES
+      IMPORTED_LOCATION "${v8}"
+    )
+
+    target_link_libraries(
+      v8
+      INTERFACE
+        c++
+    )
+
+    if(pear_host MATCHES "linux")
+      target_link_libraries(
+        v8
+        INTERFACE
+          m
+      )
+    elseif(pear_host MATCHES "android")
+      find_library(log log)
+
+      target_link_libraries(
+        v8
+        INTERFACE
+          "${log}"
+      )
+    elseif(pear_host MATCHES "win32")
+      target_link_libraries(
+        v8
+        INTERFACE
+          winmm
+      )
+    endif()
+  endif()
+
+  if(NOT TARGET js)
+    add_library(js STATIC IMPORTED GLOBAL)
+
+    find_library(
+      js
+      NAMES js libjs
+      PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
+      REQUIRED
+      NO_DEFAULT_PATH
+      NO_CMAKE_FIND_ROOT_PATH
+    )
+
+    set_target_properties(
+      js
+      PROPERTIES
+      IMPORTED_LOCATION "${js}"
+    )
+
+    target_link_libraries(
+      js
+      INTERFACE
+        v8
+    )
+  endif()
+
+  if(NOT TARGET pear)
+    add_library(pear STATIC IMPORTED GLOBAL)
+
+    find_library(
+      pear
+      NAMES pear libpear
+      PATHS "${PROJECT_SOURCE_DIR}/prebuilds/${pear_host}"
+      REQUIRED
+      NO_DEFAULT_PATH
+      NO_CMAKE_FIND_ROOT_PATH
+    )
+
+    set_target_properties(
+      pear
+      PROPERTIES
+      IMPORTED_LOCATION "${pear}"
+    )
+
+    target_include_directories(
+      pear
+      INTERFACE
+        "${pear_module_dir}"
+    )
+
+    target_link_libraries(
+      pear
+      INTERFACE
+        js
+    )
+
+    if(pear_host MATCHES "darwin")
+      target_link_libraries(
+        pear
+        INTERFACE
+          "-framework Foundation"
+          "-framework CoreMedia"
+          "-framework AppKit"
+          "-framework AVFoundation"
+          "-framework AVKit"
+          "-framework WebKit"
+      )
+    endif()
+
+    if(pear_host MATCHES "win32")
+      target_link_libraries(
+        pear
+        INTERFACE
+          Dbghelp
+          Iphlpapi
+          Shcore
+          Userenv
+          WindowsApp
+      )
+    endif()
+
+    if(pear_host MATCHES "linux")
+      find_package(PkgConfig REQUIRED)
+
+      pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4)
+
+      target_link_libraries(
+        pear
+        INTERFACE
+          PkgConfig::GTK4
+      )
+    endif()
   endif()
 
   add_executable(${target})
