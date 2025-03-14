@@ -261,7 +261,7 @@ function(add_pear_appling target)
     SOURCE excdougxjday9q8d13azwwjss8p8r66fhykb18kzjfk9bwaetkuo
     DESTINATION "${prebuilds}"
     PREFIX /${host}
-    CHECKOUT 97
+    CHECKOUT 103
   )
 
   if(NOT TARGET c++)
@@ -445,6 +445,14 @@ function(add_pear_appling target)
     PRIVATE
       $<LINK_LIBRARY:WHOLE_ARCHIVE,pear>
   )
+
+  if(WIN32)
+    target_link_libraries(
+      ${target}
+      PUBLIC
+        ntdll
+    )
+  endif()
 
   if(host MATCHES "darwin")
     configure_pear_appling_macos(
