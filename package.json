@@ -5,7 +5,6 @@
   "files": [
     "*.cmake",
     "*.c",
-    "*.h",
     "*.manifest"
   ],
   "repository": {
@@ -21,7 +20,7 @@
   "dependencies": {
     "cmake-app-image": "^1.0.0",
     "cmake-bare": "^1.1.17",
-    "cmake-drive": "^1.2.4",
+    "cmake-fetch": "^1.4.1",
     "cmake-macos": "^1.0.0",
     "cmake-msix": "^1.0.1",
     "cmake-windows": "^1.0.0"

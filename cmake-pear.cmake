@@ -1,7 +1,7 @@
 include_guard()
 
 find_package(cmake-bare REQUIRED PATHS node_modules/cmake-bare)
-find_package(cmake-drive REQUIRED PATHS node_modules/cmake-drive)
+find_package(cmake-fetch REQUIRED PATHS node_modules/cmake-fetch)
 find_package(cmake-macos REQUIRED PATHS node_modules/cmake-macos)
 find_package(cmake-app-image REQUIRED PATHS node_modules/cmake-app-image)
 find_package(cmake-windows REQUIRED PATHS node_modules/cmake-windows)
@@ -124,7 +124,7 @@ function(configure_pear_appling_windows target)
       $<$<CONFIG:Release>:/subsystem:windows /entry:mainCRTStartup>
   )
 
-  file(READ "${pear_module_dir}/pear.manifest" manifest)
+  file(READ "${pear_module_dir}/app.manifest" manifest)
 
   string(CONFIGURE "${manifest}" manifest)
 
@@ -213,7 +213,7 @@ endfunction()
 
 function(add_pear_appling target)
   set(one_value_keywords
-    KEY
+    ID
     NAME
     VERSION
     DESCRIPTION
@@ -248,176 +248,10 @@ function(add_pear_appling target)
 
   bare_target(host)
 
-  set(prebuilds "${CMAKE_CURRENT_BINARY_DIR}/_pear")
-
-  mirror_drive(
-    SOURCE qogbhqbcxknrpeotyz7hk4x3mxuf6d9mhb1dxm6ms5sdn6hh1uso
-    DESTINATION "${prebuilds}"
-    PREFIX /${host}
-    CHECKOUT 343
-  )
-
-  mirror_drive(
-    SOURCE excdougxjday9q8d13azwwjss8p8r66fhykb18kzjfk9bwaetkuo
-    DESTINATION "${prebuilds}"
-    PREFIX /${host}
-    CHECKOUT 103
-  )
-
-  if(NOT TARGET c++)
-    add_library(c++ STATIC IMPORTED GLOBAL)
-
-    find_library(
-      c++
-      NAMES c++ libc++
-      PATHS "${prebuilds}/${host}"
-      REQUIRED
-      NO_DEFAULT_PATH
-      NO_CMAKE_FIND_ROOT_PATH
-    )
-
-    set_target_properties(
-      c++
-      PROPERTIES
-      IMPORTED_LOCATION "${c++}"
-    )
-  endif()
-
-  if(NOT TARGET v8)
-    add_library(v8 STATIC IMPORTED GLOBAL)
-
-    find_library(
-      v8
-      NAMES v8 libv8
-      PATHS "${prebuilds}/${host}"
-      REQUIRED
-      NO_DEFAULT_PATH
-      NO_CMAKE_FIND_ROOT_PATH
-    )
-
-    set_target_properties(
-      v8
-      PROPERTIES
-      IMPORTED_LOCATION "${v8}"
-    )
-
-    target_link_libraries(
-      v8
-      INTERFACE
-        c++
-    )
-
-    if(host MATCHES "linux")
-      target_link_libraries(
-        v8
-        INTERFACE
-          m
-      )
-    elseif(host MATCHES "android")
-      find_library(log log)
-
-      target_link_libraries(
-        v8
-        INTERFACE
-          "${log}"
-      )
-    elseif(host MATCHES "win32")
-      target_link_libraries(
-        v8
-        INTERFACE
-          winmm
-      )
-    endif()
-  endif()
-
-  if(NOT TARGET js)
-    add_library(js STATIC IMPORTED GLOBAL)
-
-    find_library(
-      js
-      NAMES js libjs
-      PATHS "${prebuilds}/${host}"
-      REQUIRED
-      NO_DEFAULT_PATH
-      NO_CMAKE_FIND_ROOT_PATH
-    )
-
-    set_target_properties(
-      js
-      PROPERTIES
-      IMPORTED_LOCATION "${js}"
-    )
-
-    target_link_libraries(
-      js
-      INTERFACE
-        v8
-    )
-  endif()
-
-  if(NOT TARGET pear)
-    add_library(pear STATIC IMPORTED GLOBAL)
-
-    find_library(
-      pear
-      NAMES pear libpear
-      PATHS "${prebuilds}/${host}"
-      REQUIRED
-      NO_DEFAULT_PATH
-      NO_CMAKE_FIND_ROOT_PATH
-    )
-
-    set_target_properties(
-      pear
-      PROPERTIES
-      IMPORTED_LOCATION "${pear}"
-    )
-
-    target_include_directories(
-      pear
-      INTERFACE
-        "${pear_module_dir}"
-    )
-
-    target_link_libraries(
-      pear
-      INTERFACE
-        js
-    )
-
-    if(host MATCHES "darwin")
-      target_link_libraries(
-        pear
-        INTERFACE
-          "-framework Foundation"
-          "-framework CoreMedia"
-          "-framework AppKit"
-          "-framework AVFoundation"
-          "-framework AVKit"
-          "-framework WebKit"
-      )
-    elseif(host MATCHES "win32")
-      target_link_libraries(
-        pear
-        INTERFACE
-          Dbghelp
-          Iphlpapi
-          Shcore
-          Userenv
-          WindowsApp
-      )
-    elseif(host MATCHES "linux")
-      find_package(PkgConfig REQUIRED)
-
-      pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4)
-
-      target_link_libraries(
-        pear
-        INTERFACE
-          PkgConfig::GTK4
-      )
-    endif()
-  endif()
+  fetch_package("github:holepunchto/bare#ea468af")
+  fetch_package("github:holepunchto/libappling#743092a")
+  fetch_package("github:holepunchto/libfx#33678eb")
+  fetch_package("github:holepunchto/libpear#fdc7023")
 
   add_executable(${target})
 
@@ -425,34 +259,27 @@ function(add_pear_appling target)
     ${target}
     PROPERTIES
     POSITION_INDEPENDENT_CODE ON
+    LINKER_LANGUAGE CXX
   )
 
   target_sources(
     ${target}
     PRIVATE
-      "${pear_module_dir}/pear.c"
+      "${pear_module_dir}/app.c"
   )
 
   target_compile_definitions(
     ${target}
     PRIVATE
-      KEY="${ARGV_KEY}"
+      ID="${ARGV_ID}"
       NAME="${ARGV_NAME}"
   )
 
   target_link_libraries(
     ${target}
     PRIVATE
-      $<LINK_LIBRARY:WHOLE_ARCHIVE,pear>
+      pear_static
   )
-
-  if(WIN32)
-    target_link_libraries(
-      ${target}
-      PUBLIC
-        ntdll
-    )
-  endif()
 
   if(host MATCHES "darwin")
     configure_pear_appling_macos(
