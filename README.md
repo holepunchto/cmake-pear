@@ -35,9 +35,9 @@ add_pear_appling(
 
 The name of the CMake target to create for the Pear appling.
 
-##### `KEY <string>`
+##### `ID <string>`
 
-The key of the Pear appling.
+The ID of the Pear appling.
 
 ##### `NAME <string>`
 
