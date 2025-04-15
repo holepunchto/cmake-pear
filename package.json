@@ -1,6 +1,6 @@
 {
   "name": "cmake-pear",
-  "version": "1.0.11",
+  "version": "2.0.0",
   "description": "Pear utilities for CMake",
   "files": [
     "*.cmake",
