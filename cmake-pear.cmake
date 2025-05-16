@@ -249,7 +249,7 @@ function(add_pear_appling target)
   bare_target(host)
 
   fetch_package("github:holepunchto/bare#b6d00e6")
-  fetch_package("github:holepunchto/libappling#f3de31e")
+  fetch_package("github:holepunchto/libappling#db00120")
   fetch_package("github:holepunchto/libfx#33678eb")
   fetch_package("github:holepunchto/libpear#8b9c360")
 
