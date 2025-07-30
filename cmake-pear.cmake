@@ -215,6 +215,7 @@ function(add_pear_appling target)
   set(one_value_keywords
     ID
     NAME
+    LINK
     VERSION
     DESCRIPTION
     AUTHOR
@@ -273,6 +274,7 @@ function(add_pear_appling target)
     PRIVATE
       ID="${ARGV_ID}"
       NAME="${ARGV_NAME}"
+      LINK="${ARGV_LINK}"
   )
 
   target_link_libraries(
