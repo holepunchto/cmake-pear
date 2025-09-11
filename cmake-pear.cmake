@@ -250,9 +250,9 @@ function(add_pear_appling target)
   bare_target(host)
 
   fetch_package("github:holepunchto/bare#5d71064")
-  fetch_package("github:holepunchto/libappling#app-link")
+  fetch_package("github:holepunchto/libappling#aed94db")
   fetch_package("github:holepunchto/libfx#33678eb")
-  fetch_package("github:AndreiRegiani/libpear#app-link")
+  fetch_package("github:holepunchto/libpear#0ad443d")
 
   add_executable(${target})
 
