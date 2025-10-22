@@ -272,9 +272,9 @@ function(add_pear_appling target)
   target_compile_definitions(
     ${target}
     PRIVATE
-      ID="${ARGV_ID}"
-      NAME="${ARGV_NAME}"
-      LINK="${ARGV_LINK}"
+      "ID=\"${ARGV_ID}\""
+      "NAME=\"${ARGV_NAME}\""
+      "LINK=\"${ARGV_LINK}\""
   )
 
   target_link_libraries(
