@@ -215,7 +215,6 @@ function(add_pear_appling target)
   set(one_value_keywords
     ID
     NAME
-    LINK
     VERSION
     DESCRIPTION
     AUTHOR
@@ -253,7 +252,7 @@ function(add_pear_appling target)
   fetch_package("github:holepunchto/libjstl#098664c")
   fetch_package("github:holepunchto/libappling#aa84f37")
   fetch_package("github:holepunchto/libfx#33678eb")
-  fetch_package("github:holepunchto/libpear#f39cec0")
+  fetch_package("github:holepunchto/libpear#429baa2")
 
   add_executable(${target})
 
@@ -275,7 +274,6 @@ function(add_pear_appling target)
     PRIVATE
       "ID=\"${ARGV_ID}\""
       "NAME=\"${ARGV_NAME}\""
-      "LINK=\"${ARGV_LINK}\""
   )
 
   target_link_libraries(

@@ -13,7 +13,6 @@ add_pear_appling(
   <target>
   ID <string>
   NAME <string>
-  LINK <string>
   VERSION <string>
   DESCRIPTION <string>
   AUTHOR <string>
@@ -43,10 +42,6 @@ The ID of the Pear appling.
 ##### `NAME <string>`
 
 The name of the appling as presented to users.
-
-##### `LINK <string>`
-
-The application Pear link.
 
 ##### `VERSION <string>`
 
