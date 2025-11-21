@@ -252,7 +252,7 @@ function(add_pear_appling target)
   fetch_package("github:holepunchto/libjstl#098664c")
   fetch_package("github:holepunchto/libappling#ea34910")
   fetch_package("github:holepunchto/libfx#33678eb")
-  fetch_package("github:holepunchto/libpear#ce79cde")
+  fetch_package("github:holepunchto/libpear#bf9a1ab")
 
   add_executable(${target})
 
